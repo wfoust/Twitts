@@ -9,8 +9,6 @@ from washing_machine_2 import * #This is the function which cleans the tweet tex
 #import re #used in washing_machine()
 #from nltk.stem.snowball import SnowballStemmer #used in washing_machine()
 
-print consumer_key
-
 
 #---------------------------------------------------------------------------------
 
@@ -78,65 +76,64 @@ list_o_dicts = []
 info = {}
 
 for i in range(len(tweetlist["statuses"])):
-	info["query"] = tweetlist["search_metadata"].get("query", None)
-	info["status_contributors"] = tweetlist["statuses"][i].get("contributors", None)
-	info["status_coordinates"] = tweetlist["statuses"][i].get("coordinates", None)
-	info["status_created_at"] = tweetlist["statuses"][i].get("created_at", None)
+    info["query"] = tweetlist["search_metadata"].get("query", None)
+    info["status_contributors"] = tweetlist["statuses"][i].get("contributors", None)
+    info["status_coordinates"] = tweetlist["statuses"][i].get("coordinates", None)
+    info["status_created_at"] = tweetlist["statuses"][i].get("created_at", None)
+    
+    hashtags = []
+    for j in range(0, len(tweetlist["statuses"][i]["entities"]["hashtags"])):
+        hashtags.append(tweetlist["statuses"][i]["entities"]["hashtags"][j].get("text", None))
+    if hashtags:  #This conditional says, if the list is empty force it to None instead of []
+        info["status_hashtags"] = hashtags
+    else:
+        info["status_hashtags"] = None
+        
+    user_mentions = []
+    for j in range(0, len(tweetlist["statuses"][i]["entities"]["user_mentions"])):
+        user_mentions.append(tweetlist["statuses"][i]["entities"]["user_mentions"][j].get("screen_name", None))
+    if user_mentions: #This conditional says, if the list is empty force it to None instead of []
+        info["status_user_mentions"] = user_mentions
+    else:
+        info["status_user_mentions"] = None
+        
+    info["status_favorite_count"] = tweetlist["statuses"][i].get("favorite_count", None)
+    info["status_id"] = tweetlist["statuses"][i].get("id", None)
+    info["status_in_reply_to_screen_name"] = tweetlist["statuses"][i].get("in_reply_to_screen_name", None)
+    info["status_in_reply_to_status_id"] = tweetlist["statuses"][i].get("in_reply_to_status_id", None)
+    info["status_in_reply_to_user_id"] = tweetlist["statuses"][i].get("in_reply_to_user_id", None)
+    info["status_is_quote_status"] = tweetlist["statuses"][i].get("is_quote_status", None)
+    info["status_lang"] = tweetlist["statuses"][i].get("lang", None)
+    info["status_metadata_iso_lang_code"] = tweetlist["statuses"][i]["metadata"].get("iso_language_code", None)
+    info["status_metadata_result_type"] = tweetlist["statuses"][i]["metadata"].get("result_type", None)
+    info["status_place"] = tweetlist["statuses"][i].get("place", None)
+    info["status_retweet_count"] = tweetlist["statuses"][i].get("retweet_count", None)
+    info["status_text"] = tweetlist["statuses"][i].get("text", None)
+    info["status_text_clean"] = washing_machine(tweetlist["statuses"][i].get("text", " "), expansions)
+    info["user_created_at"] = tweetlist["statuses"][i]["user"].get("created_at", None)
+    info["user_description"] = tweetlist["statuses"][i]["user"].get("description", None)
+#   info["user_entities"] = tweetlist["statuses"][i]["user"].get("entities", None)
+    info["user_friends_count"] = tweetlist["statuses"][i]["user"].get("friends_count", None)
+    info["user_id"] = tweetlist["statuses"][i]["user"].get("id", None)
+    info["user_lang"] = tweetlist["statuses"][i]["user"].get("lang", None)
+    info["user_listed_count"] = tweetlist["statuses"][i]["user"].get("listed_count", None)
+    info["user_location"] = tweetlist["statuses"][i]["user"].get("location", None)
+    info["user_name"] = tweetlist["statuses"][i]["user"].get("name", None)
+    info["user_screen_name"] = tweetlist["statuses"][i]["user"].get("screen_name", None)
+    info["user_statuses_count"] = tweetlist["statuses"][i]["user"].get("statuses_count", None)
+    info["user_time_zone"] = tweetlist["statuses"][i]["user"].get("time_zone", None)
+    info["user_url"] = tweetlist["statuses"][i]["user"].get("url", None)
+    info["user_utc_offset"] = tweetlist["statuses"][i]["user"].get("utc_offset", None)
+    info["user_verified"] = tweetlist["statuses"][i]["user"].get("verified", None)
 
-	hashtags = []
-	for j in range(0, len(tweetlist["statuses"][i]["entities"]["hashtags"])):
-		hashtags.append(tweetlist["statuses"][i]["entities"]["hashtags"][j].get("text", None))
-	if hashtags:  #This conditional says, if the list is empty force it to None instead of []
-		info["status_hashtags"] = hashtags
-	else:
-		info["status_hashtags"] = None
-
-	user_mentions = []
-	for j in range(0, len(tweetlist["statuses"][i]["entities"]["user_mentions"])):
-	        user_mentions.append(tweetlist["statuses"][i]["entities"]["user_mentions"][j].get("screen_name", None))
-	if user_mentions: #This conditional says, if the list is empty force it to None instead of []
-		info["status_user_mentions"] = user_mentions
-	else:
-		info["status_user_mentions"] = None
-
-	info["status_favorite_count"] = tweetlist["statuses"][i].get("favorite_count", None)
-	info["status_id"] = tweetlist["statuses"][i].get("id", None)
-	info["status_in_reply_to_screen_name"] = tweetlist["statuses"][i].get("in_reply_to_screen_name", None)
-	info["status_in_reply_to_status_id"] = tweetlist["statuses"][i].get("in_reply_to_status_id", None)
-	info["status_in_reply_to_user_id"] = tweetlist["statuses"][i].get("in_reply_to_user_id", None)
-	info["status_is_quote_status"] = tweetlist["statuses"][i].get("is_quote_status", None)
-	info["status_lang"] = tweetlist["statuses"][i].get("lang", None)
-	info["status_metadata_iso_lang_code"] = tweetlist["statuses"][i]["metadata"].get("iso_language_code", None)
-	info["status_metadata_result_type"] = tweetlist["statuses"][i]["metadata"].get("result_type", None)
-	info["status_place"] = tweetlist["statuses"][i].get("place", None)
-	info["status_retweet_count"] = tweetlist["statuses"][i].get("retweet_count", None)
-	info["status_text"] = tweetlist["statuses"][i].get("text", None)
-	info["status_text_clean"] = washing_machine(tweetlist["statuses"][i].get("text", " "), expansions)
-	info["user_created_at"] = tweetlist["statuses"][i]["user"].get("created_at", None)
-	info["user_description"] = tweetlist["statuses"][i]["user"].get("description", None)
-#	info["user_entities"] = tweetlist["statuses"][i]["user"].get("entities", None)
-	info["user_friends_count"] = tweetlist["statuses"][i]["user"].get("friends_count", None)
-	info["user_id"] = tweetlist["statuses"][i]["user"].get("id", None)
-	info["user_lang"] = tweetlist["statuses"][i]["user"].get("lang", None)
-	info["user_listed_count"] = tweetlist["statuses"][i]["user"].get("listed_count", None)
-	info["user_location"] = tweetlist["statuses"][i]["user"].get("location", None)
-	info["user_name"] = tweetlist["statuses"][i]["user"].get("name", None)
-	info["user_screen_name"] = tweetlist["statuses"][i]["user"].get("screen_name", None)
-	info["user_statuses_count"] = tweetlist["statuses"][i]["user"].get("statuses_count", None)
-	info["user_time_zone"] = tweetlist["statuses"][i]["user"].get("time_zone", None)
-	info["user_url"] = tweetlist["statuses"][i]["user"].get("url", None)
-	info["user_utc_offset"] = tweetlist["statuses"][i]["user"].get("utc_offset", None)
-	info["user_verified"] = tweetlist["statuses"][i]["user"].get("verified", None)
-
-# maybe as I go through and grab all the info I want from each status I should delete that status from tweetlist to conserve memory?
-	list_o_dicts.append(info)
-	info = {}
-#test to see if i get encoding errors with the following:
-	
+    # maybe as I go through and grab all the info I want from each status I should delete that status from tweetlist to conserve memory?
+    list_o_dicts.append(info)
+    info = {}
+    #test to see if i get encoding errors with the following:
 
 
 with open("out__1.json", "w") as outfile:
-       json.dump(list_o_dicts, outfile, sort_keys=True, indent=4)
+        json.dump(list_o_dicts, outfile, sort_keys=True, indent=4)
 
 
 del tweetlist
